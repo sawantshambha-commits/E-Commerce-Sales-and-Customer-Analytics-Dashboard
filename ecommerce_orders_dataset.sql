@@ -80,3 +80,33 @@ FROM ecommerce_orders_dataset
 GROUP BY DATE_FORMAT(Order_date, '%Y-%m')
 ORDER BY DATE_FORMAT(Order_date, '%Y-%m');
 
+-- Month Moving Average
+select date_format(order_date, '%y-%m'), avg(TotalPrice) over(order by date_format(order_date, '%y-%m')) as month_avg
+from ecommerce_orders_dataset
+group by date_format(order_date, '%y-%m')
+order by date_format(order_date, '%y-%m');
+
+-- Top 10 Customers by Revenue
+select CustomerId, sum(TotalPrice) as Total_Revenue
+from ecommerce_orders_dataset
+group by CustomerID
+order by Total_Revenue desc
+limit 10;
+
+-- Loss Making Customers
+select CustomerID, sum(TotalPrice) as Total_Revenue
+from ecommerce_orders_dataset
+group by CustomerID
+having Total_Revenue < 0;
+
+-- Prduct Wise Sales Contribution %
+select Product, round(sum(TotalPrice), 02) as Total_Sales, 
+round(sum(TotalPrice)*100 / (select sum(TotalPrice) from ecommerce_orders_dataset), 02) as Sales_Percetage
+from ecommerce_orders_dataset
+group by Product
+order by Sales_Percetage;
+
+select Product  from ecommerce_orders_dataset limit 1;
+
+
+
