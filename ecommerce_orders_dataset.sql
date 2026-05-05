@@ -106,7 +106,56 @@ from ecommerce_orders_dataset
 group by Product
 order by Sales_Percetage;
 
-select Product  from ecommerce_orders_dataset limit 1;
+-- Most ReferralSource
+
+select ReferralSource, count(*) as Total
+from ecommerce_orders_dataset
+group by ReferralSource
+order by Total desc
+limit 1;
+
+-- Rank Products by Total Sales
+SELECT 
+    product,
+    round(SUM(TotalPrice), 02) AS Total_Amount,
+    ROW_NUMBER() OVER (ORDER BY SUM(TotalPrice) DESC) AS Ranking
+FROM ecommerce_orders_dataset
+GROUP BY product;
+
+
+-- Bottom Products by Profit
+SELECT Product, round(sum(TotalPrice), 02) as total_sales
+from ecommerce_orders_dataset
+group by Product
+order by total_sales
+limit 1;
+
+-- Repeat Customers
+select CustomerID, count(*) as Total_Order
+from ecommerce_orders_dataset
+group by CustomerID
+having Total_Order > 1;
+
+-- Average Order Value
+select round(sum(TotalPrice) / count(orderID) , 02) as avg_value
+from ecommerce_orders_dataset; 
+
+-- Average Order Value productwise
+select Product, round(avg(TotalPrice), 02) as avg_sales
+from ecommerce_orders_dataset
+group by Product; 
+
+-- First Purchase of Every Customer
+select CustomerID, min(Order_date) as First_Purchase_date
+from ecommerce_orders_dataset
+group by CustomerID;
+
+-- Last Purchase of Every Customer
+select CustomerID, max(Order_date) as Last_Purchase_date
+from ecommerce_orders_dataset
+group by CustomerID;
+
+select *  from ecommerce_orders_dataset limit 1;
 
 
 
