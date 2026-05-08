@@ -155,6 +155,18 @@ select CustomerID, max(Order_date) as Last_Purchase_date
 from ecommerce_orders_dataset
 group by CustomerID;
 
+-- Customer Lifetime 
+select CustomerID, sum(TotalPrice) as Lifetime_value
+from ecommerce_orders_dataset
+group by CustomerID
+order by Lifetime_value desc;
+
+-- Sales by Weekday
+select dayname(Order_date) as weekday, year(Order_date) as year, round(sum(TotalPrice), 02) as Total_sales
+from ecommerce_orders_dataset
+group by dayname(Order_date),Year(Order_date)
+order by dayname(Order_date);
+
 select *  from ecommerce_orders_dataset limit 1;
 
 
